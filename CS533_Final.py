@@ -13,8 +13,15 @@ import time
 import random
 
 def UCT():
-    print "DO uct Algorithm
+    print "DO uct Algorithm"
 
-def random_move
-    
+def random_move(game):
+    moves = game.generate_moves()
+    print moves #remove
+    move_index = random.randint(0,len(moves)-1)
+    move = moves[move_index]
+    print("I chose move {0}".format(move)) #remove
+    return (0,move)
+
+
 

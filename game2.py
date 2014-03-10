@@ -1,6 +1,8 @@
 # game2: play a 2 person game
 
 from time import time
+from time import sleep
+import CS533_Final as ourAgents
 
 class IllegalMove(Exception):
     pass
@@ -48,6 +50,10 @@ def play(game, player1, player2, verbose = True):
         if verbose:
             print game
             print "(player", next, "score", -1*game.score(), ")"
+        
+        #Rich Added for troublshooting... pause between each move to see what is going on.
+        #sleep(3)
+        
         # switch the next player and continue the game play loop
         next = 3 - next
 
@@ -102,30 +108,34 @@ if __name__ == "__main__":
     import othello
     import minimax
 
+    ## Rich's playing around with functions....    
+    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
+         player(lambda x: ourAgents.random_move(x)), True)
+    
+    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
+        player(lambda x: user_player(x)), True)
 
     # Experiment 1:
     # Player 1 and Player 2 are evenly matched with 3-ply deep search
     # player 2 wins with a final score of 28
     # player 1 0.2 s per ply player 2 0.4 s per ply
-    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
-         player(lambda x: minimax.minimax(x, 3)), False)
+#    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
+#         player(lambda x: minimax.minimax(x, 3)), True)
     
     # Experiment 2:
     # now we show the significance of an evaluation function
     # we weaken player1 to 2 ply deep but use the edge eval fun
     # player 1 now beats player 2 with a score of 58!
     # player 1 0.1 s per ply player 2 0.4 s per ply
-    play(othello.game(), player(lambda x: minimax.minimax(x, 2, othello.edge_eval)),
-         player(lambda x: minimax.minimax(x, 3)), False)
+#    play(othello.game(), player(lambda x: minimax.minimax(x, 2, othello.edge_eval)),
+#         player(lambda x: minimax.minimax(x, 3)), False)
 
     # Experiment 1 (with alpha-beta):
     # player 1 0.1 s per ply, player 2 0.1 s per ply
-    play(othello.game(), player(lambda x: minimax.alphabeta(x, 3)),
-         player(lambda x: minimax.alphabeta(x, 3)), False)
+#    play(othello.game(), player(lambda x: minimax.alphabeta(x, 3)),
+#         player(lambda x: minimax.alphabeta(x, 3)), False)
 
     # Experiment 2 (with alpha-beta):
     # player 1 0.0 s per ply player 2 0.1 s per ply
-    play(othello.game(), player(lambda x: minimax.alphabeta(x, 2, othello.edge_eval)),
-         player(lambda x: minimax.alphabeta(x, 3)), False)
-
-
+#    play(othello.game(), player(lambda x: minimax.alphabeta(x, 2, othello.edge_eval)),
+#         player(lambda x: minimax.alphabeta(x, 3)), False)
