@@ -37,15 +37,25 @@ class Tree(object):
         #   update own local state based on result
         #   return result
 
-
-    def simulate(self, start_state):
-        """
-        Simulates a game using a random or default policy from the start_state.
-        Returns who won.
-        """
-        # TODO everything, but especially who wins
-        return random.choice([1, 0, -1])
-
+    
+    def _random_policy(self, game)
+        moves = game.generate_moves()
+        return moves[random.randint(0, len(moves)-1)]
+    
+    def simulate_random(self, start_state):
+        ''' 
+        This simulates the random policy that occurs outside of the tree
+        policy. Simulates adversarial othello playing until end of game.
+        inputs: start_state = a 'game' object
+        returns: winner score (- for player 2)(+ for player 1)
+        '''
+        return game2.play(start_state, (lambda x: self._random_policy(x)), (lambda x: self._random_policy(x)), False)
+    
+    def _greedy_policy(self, game):
+        return        
+    
+    def simulate_greedy(self, start_state):
+        return game2.play(start_state, (lambda x: self.greedy_policy(x)), (lambda x: self._greedy_policy(x)), False)
 
 class Node(object):
     def __init__(self, parent_idx, parent_action, idx, state):
