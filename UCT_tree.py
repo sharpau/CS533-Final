@@ -35,6 +35,22 @@ class Tree(object):
         This is a recursive function (if this isn't a leaf node).
         Propagating up the tree takes place as the recursion unwinds.
         """
+        # if start_node has actions that have never been taken
+        #   action = random.choice(start_node.never_taken())
+        #   state = start_node.state.copy()
+        #   state.take_action(action)
+        #   new_idx = len(self.nodes)
+        #   self.nodes.append(new Node(start_node.idx, new_idx, state))
+        #   result = simulate(self.nodes(new_idx).state.copy())
+        #   update local state of node at new_idx
+        #   update own local state
+        #   return result
+        # else
+        #   action = tree_policy(start_node)
+        #   figure out which of start_node's child states corresponds to this node
+        #   result = trajectory(that_child_state, time??)
+        #   update own local state based on result
+        #   return result
 
         actions = start_node.generate_moves()
         not_yet_taken = [x for x in actions if start_node.action_counts[str(x)] == 0]
@@ -74,24 +90,6 @@ class Tree(object):
             self.update(start_node, action, result)
 
             return result
-
-        # if start_node has actions that have never been taken
-        #   action = random.choice(start_node.never_taken())
-        #   state = start_node.state.copy()
-        #   state.take_action(action)
-        #   new_idx = len(self.nodes)
-        #   self.nodes.append(new Node(start_node.idx, new_idx, state))
-        #   TODO simulate trajectory from new Node and propagate back up
-        #   result = simulate(self.nodes(new_idx).state.copy())
-        #   update local state of node at new_idx TODO need some way to update based on action
-        #   update own local state
-        #   return result
-        # else
-        #   action = tree_policy(start_node)
-        #   figure out which of start_node's child states corresponds to this node
-        #   result = trajectory(that_child_state, time??)
-        #   update own local state based on result
-        #   return result
 
     def update(self, node, action, result):
         # black = player 1, first to go, positive scores
