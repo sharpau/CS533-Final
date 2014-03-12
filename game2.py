@@ -70,7 +70,8 @@ def play(game, player1, player2, verbose = True):
         print "%d ply: Player 1 %.1f s per ply. Player2 %.1f s per ply" % (
             player1_ply+player2_ply, player1_think/player1_ply,
             player2_think/player2_ply)
-
+    
+    ## added following return capability for UCT algorithm training
     score = 0
     for i in othello.range_size:
         for j in othello.range_size:
