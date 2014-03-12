@@ -1,9 +1,7 @@
 # game2: play a 2 person game
 
 from time import time
-from time import sleep
-## Rich Added, need reference to our policies...
-import CS533_Final as ourPolicies
+import othello
 
 class IllegalMove(Exception):
     pass
@@ -52,12 +50,8 @@ def play(game, player1, player2, verbose = True):
             print game
             print "(player", next, "score", -1*game.score(), ")"
         
-        ## Rich Added for troublshooting... pause between each move to see what is going on.
-        #sleep(3)
-        
         # switch the next player and continue the game play loop
         next = 3 - next
-
 
     score = game.score()
     if score > 0:
@@ -76,6 +70,15 @@ def play(game, player1, player2, verbose = True):
         print "%d ply: Player 1 %.1f s per ply. Player2 %.1f s per ply" % (
             player1_ply+player2_ply, player1_think/player1_ply,
             player2_think/player2_ply)
+
+    score = 0
+    for i in othello.range_size:
+        for j in othello.range_size:
+            score += game.board[i][j]
+
+    print "our objective score that tells you who wins is " + str(-1 * score)
+    return -1 * score
+
 
 def user_player(game):
     """Make a user player to play the game."""
@@ -105,73 +108,32 @@ class player:
     def gameover(self, game, last_move):
         pass
 
-## this function trains a tree-structured policy learned by monte-carlo UCT algorithm
-## inputs: None
-## returns: root of learned tree? or string of filename saved to disk? both?
-## updates: None
-def UCT_trainer():
-    '''Pseudocode:
-
-    Init Tree root
-    
-    while(checking some flag to know when done training... or just i < bigNumber)
-        use the game2.play function to train UCT against some opponent:
-        something like:
-        play(othello.game(), player(lambda x: minimax.minimax(x,3)), player(lambda x: ourAgents.UCT_trainer(x)), False)
-        or we could just play against a random policy:
-        play(othello.game(), player(lambda x: ourAgents.random_move_policy(x)), player(lambda x: ourAgents.UCT_trainer(x)), False)
-        
-    somehow store learned tree to disk
-    return tree as well?  
-    
-    
-    '''
-    return
    
 if __name__ == "__main__":
     import othello
     import minimax
 
-    ## for actual UCT training just do:
-#    uct_policy = UCT_trainer()
-    
-    ## to actually use the trained policy to play against a real person:
-#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)), player(lambda x: user_player(x)), True) 
-    ## or to use the trained policy to play against their algorithm:
-#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)), 
-#         player(lambda x: minimax.minimax(x, 3)) , True)
-    
-    
-    ## Rich's playing around with functions....    
-    play(othello.game(), player(lambda x: minimax.minimax(x, 3)), player(lambda x: ourPolicies.random_move_policy(x)), True)
-    
-    play(othello.game(), player(lambda x: minimax.minimax(x, 3)), player(lambda x: user_player(x)), True)
-
-   
-############################################################################################################################################
-## From Original file...
-
     # Experiment 1:
     # Player 1 and Player 2 are evenly matched with 3-ply deep search
     # player 2 wins with a final score of 28
     # player 1 0.2 s per ply player 2 0.4 s per ply
-#    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
-#         player(lambda x: minimax.minimax(x, 3)), True)
+    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
+         player(lambda x: minimax.minimax(x, 3)), True)
     
     # Experiment 2:
     # now we show the significance of an evaluation function
     # we weaken player1 to 2 ply deep but use the edge eval fun
     # player 1 now beats player 2 with a score of 58!
     # player 1 0.1 s per ply player 2 0.4 s per ply
-#    play(othello.game(), player(lambda x: minimax.minimax(x, 2, othello.edge_eval)),
-#         player(lambda x: minimax.minimax(x, 3)), False)
+    play(othello.game(), player(lambda x: minimax.minimax(x, 2, othello.edge_eval)),
+         player(lambda x: minimax.minimax(x, 3)), False)
 
     # Experiment 1 (with alpha-beta):
     # player 1 0.1 s per ply, player 2 0.1 s per ply
-#    play(othello.game(), player(lambda x: minimax.alphabeta(x, 3)),
-#         player(lambda x: minimax.alphabeta(x, 3)), False)
+    play(othello.game(), player(lambda x: minimax.alphabeta(x, 3)),
+         player(lambda x: minimax.alphabeta(x, 3)), False)
 
     # Experiment 2 (with alpha-beta):
     # player 1 0.0 s per ply player 2 0.1 s per ply
-#    play(othello.game(), player(lambda x: minimax.alphabeta(x, 2, othello.edge_eval)),
-#         player(lambda x: minimax.alphabeta(x, 3)), False)
+    play(othello.game(), player(lambda x: minimax.alphabeta(x, 2, othello.edge_eval)),
+         player(lambda x: minimax.alphabeta(x, 3)), False)

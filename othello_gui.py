@@ -186,14 +186,3 @@ under certain conditions."""
     game2.play(othello.game(),
                game2.player(lambda x: minimax.alphabeta(x, 4, othello.edge_eval)),
                player(), True)
-    
-    ## So Plan here is to make the opponent player our UCT algorithm?... 
-    ## this would be for visual aid in presentation?
-    ## SO we could play against it live as part of presentation?
-    ## some like:
-#    game2.play(othello.game(), game2.player(lambda x: CS533_Final.UCTAgent(x)), player(), True)
-    
-    
-               
-               
-               

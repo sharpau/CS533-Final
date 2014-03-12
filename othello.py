@@ -42,10 +42,13 @@ class game:
             self.board = [[0 for j in range_size] for i in range_size]
             # with the middle four squares filled in
             # -1 is black +1 is white, 0 => empty
-            self.board[3][3] = 1
-            self.board[4][4] = 1
-            self.board[3][4] = -1
-            self.board[4][3] = -1
+            assert(size >= 4)
+            assert(size % 2 == 0)
+            mid = size / 2 - 1
+            self.board[mid][mid] = 1
+            self.board[mid + 1][mid + 1] = 1
+            self.board[mid][mid + 1] = -1
+            self.board[mid + 1][mid] = -1
             # its white's move
             self.player = -1
         else:

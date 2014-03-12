@@ -60,5 +60,24 @@ def random_move_policy(game):
     print("I chose move {0}".format(move)) #remove
     return (0,move)
 
+if __name__ == "__main__":
+    import othello
+    import minimax
+    import game2
+    ## for actual UCT training just do:
+#    uct_policy = UCT_trainer()
+
+    ## to actually use the trained policy to play against a real person:
+#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)), player(lambda x: user_player(x)), True)
+    ## or to use the trained policy to play against their algorithm:
+#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)),
+#         player(lambda x: minimax.minimax(x, 3)) , True)
+
+
+    ## Rich's playing around with functions....
+    #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: random_move_policy(x)), True)
+
+    game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: minimax.minimax(x, 3)), True)
+
 
 
