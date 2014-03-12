@@ -2,7 +2,8 @@
 
 from time import time
 from time import sleep
-import CS533_Final as ourAgents
+## Rich Added, need reference to our policies...
+import CS533_Final as ourPolicies
 
 class IllegalMove(Exception):
     pass
@@ -51,7 +52,7 @@ def play(game, player1, player2, verbose = True):
             print game
             print "(player", next, "score", -1*game.score(), ")"
         
-        #Rich Added for troublshooting... pause between each move to see what is going on.
+        ## Rich Added for troublshooting... pause between each move to see what is going on.
         #sleep(3)
         
         # switch the next player and continue the game play loop
@@ -103,17 +104,52 @@ class player:
 
     def gameover(self, game, last_move):
         pass
+
+## this function trains a tree-structured policy learned by monte-carlo UCT algorithm
+## inputs: None
+## returns: root of learned tree? or string of filename saved to disk? both?
+## updates: None
+def UCT_trainer():
+    '''Pseudocode:
+
+    Init Tree root
     
+    while(checking some flag to know when done training... or just i < bigNumber)
+        use the game2.play function to train UCT against some opponent:
+        something like:
+        play(othello.game(), player(lambda x: minimax.minimax(x,3)), player(lambda x: ourAgents.UCT_trainer(x)), False)
+        or we could just play against a random policy:
+        play(othello.game(), player(lambda x: ourAgents.random_move_policy(x)), player(lambda x: ourAgents.UCT_trainer(x)), False)
+        
+    somehow store learned tree to disk
+    return tree as well?  
+    
+    
+    '''
+    return
+   
 if __name__ == "__main__":
     import othello
     import minimax
 
-    ## Rich's playing around with functions....    
-    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
-         player(lambda x: ourAgents.random_move(x)), True)
+    ## for actual UCT training just do:
+#    uct_policy = UCT_trainer()
     
-    play(othello.game(), player(lambda x: minimax.minimax(x, 3)),
-        player(lambda x: user_player(x)), True)
+    ## to actually use the trained policy to play against a real person:
+#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)), player(lambda x: user_player(x)), True) 
+    ## or to use the trained policy to play against their algorithm:
+#    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)), 
+#         player(lambda x: minimax.minimax(x, 3)) , True)
+    
+    
+    ## Rich's playing around with functions....    
+    play(othello.game(), player(lambda x: minimax.minimax(x, 3)), player(lambda x: ourPolicies.random_move_policy(x)), True)
+    
+    play(othello.game(), player(lambda x: minimax.minimax(x, 3)), player(lambda x: user_player(x)), True)
+
+   
+############################################################################################################################################
+## From Original file...
 
     # Experiment 1:
     # Player 1 and Player 2 are evenly matched with 3-ply deep search
