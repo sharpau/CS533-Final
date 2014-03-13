@@ -11,6 +11,7 @@
 
 import time
 import random
+import UCT_tree
 
 '''IDK about any of this... the inheritance between files & file structure
     is a little weird.'''
@@ -77,7 +78,8 @@ if __name__ == "__main__":
     ## Rich's playing around with functions....
     #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: random_move_policy(x)), True)
 
-    game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: minimax.minimax(x, 3)), True)
+    t = UCT_tree.Tree(20)
+    game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(t.policy), True)
 
 
 

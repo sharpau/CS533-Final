@@ -3,12 +3,15 @@ __author__ = 'Austin'
 import othello
 import random
 import math
+import game2
+import operator
 
 
 class Tree(object):
     def __init__(self, time):
         """
         time is the number of simulated trajectories before returning a move
+        for #trajectories, must be greater than the branching factor at any node
         """
         self.nodes = []
         self.time = time
@@ -25,9 +28,9 @@ class Tree(object):
 
         # pick action from root with highest Q-value
         actions = self.nodes[0].state.generate_moves()
-        max_index, _ = max([(self.nodes[0].action_values[x]/self.nodes[0].action_counts[x]) for x in [str(y) for y in actions]])
+        max_index, _ = max(enumerate([(self.nodes[0].action_values[x]/self.nodes[0].action_counts[x]) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
 
-        return actions[max_index]
+        return 0, actions[max_index]
 
     def trajectory(self, start_node):
         """
@@ -52,7 +55,7 @@ class Tree(object):
         #   update own local state based on result
         #   return result
 
-        actions = start_node.generate_moves()
+        actions = start_node.state.generate_moves()
         not_yet_taken = [x for x in actions if start_node.action_counts[str(x)] == 0]
         if len(not_yet_taken) > 0:
             # take an action that we haven't yet taken
@@ -67,21 +70,21 @@ class Tree(object):
             # simulate trajectory from this node
             new_node_action = random.choice(state.generate_moves())
             state.play_move(new_node_action)
-            result = self.simulate(self.nodes[new_idx].state.copy())
+            result = self.simulate_random(self.nodes[new_idx].state.copy())
 
             # update child
             self.update(self.nodes[new_idx], new_node_action, result)
             # update self
             self.update(start_node, action, result)
             # update action -> child mapping
-            start_node.child_idxs[str[action]] = new_idx
+            start_node.child_idxs[str(action)] = new_idx
 
             # unwind recursion
             return result
         else:
             c = 1
             # determine action to take based on start_node.action_counts and start_node.action_values and start_node.visits
-            max_index, _ = max([(start_node.action_values[x]/start_node.action_counts[x] + c * math.sqrt(math.log(start_node.visits) / start_node.action_counts[x])) for x in [str(y) for y in actions]])
+            max_index, _ = max(enumerate([self.tree_search_value(start_node, x, c) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
             action = actions[max_index]
 
             result = self.trajectory(self.nodes[start_node.child_idxs[str(action)]])
@@ -91,6 +94,12 @@ class Tree(object):
 
             return result
 
+    def tree_search_value(self, node, action_key, c):
+        q = node.action_values[action_key] / node.action_counts[action_key]
+        explore = math.log(node.visits) / node.action_counts[action_key]
+        result = q + c * math.sqrt(explore)
+        return result
+
     def update(self, node, action, result):
         # black = player 1, first to go, positive scores
         # white = player 2, second to go, negative scores
@@ -99,9 +108,8 @@ class Tree(object):
         node.action_counts[str(action)] += 1
         node.action_values[str(action)] += result
     
-    def _random_policy(self, game)
-        moves = game.generate_moves()
-        return moves[random.randint(0, len(moves)-1)]
+    def _random_policy(self, game):
+        return 0, random.choice(game.generate_moves())
     
     def simulate_random(self, start_state):
         ''' 
@@ -110,16 +118,16 @@ class Tree(object):
         inputs: start_state = a 'game' object
         returns: winner score (- for player 2)(+ for player 1)
         '''
-        return game2.play(start_state, (lambda x: self._random_policy(x)), (lambda x: self._random_policy(x)), False)
+        return game2.play(start_state, game2.player(lambda x: self._random_policy(x)), game2.player(lambda x: self._random_policy(x)), False)
     
     def _greedy_policy(self, game):
-        return        
+        return 0, random.choice(game.generate_moves())
     
     def simulate_greedy(self, start_state):
-        return game2.play(start_state, (lambda x: self.greedy_policy(x)), (lambda x: self._greedy_policy(x)), False)
+        return game2.play(start_state, game2.player(lambda x: self.greedy_policy(x)), game2.player(lambda x: self._greedy_policy(x)), False)
 
 class Node(object):
-    def __init__(self, parent_idx, parent_action, idx, state):
+    def __init__(self, parent_idx, idx, state):
         """
         parent_idx and idx are the positions of the node in some global array of nodes
         they're kind of important to maintaining a tree, doncha know

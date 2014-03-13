@@ -53,14 +53,14 @@ def play(game, player1, player2, verbose = True):
         # switch the next player and continue the game play loop
         next = 3 - next
 
-    score = game.score()
-    if score > 0:
-        print "player "+str(next)+" won with score", score
-    elif score < 0:
-        print "player "+str(3-next)+" won with score", -1*score
-    else:
-        winner = 0
-        print "DRAW!!"
+    # score = game.score()
+    # if score > 0:
+    #     print "player "+str(next)+" won with score", score
+    # elif score < 0:
+    #     print "player "+str(3-next)+" won with score", -1*score
+    # else:
+    #     winner = 0
+    #     print "DRAW!!"
 
     temp = game.copy()
     player1.gameover(temp, last_move)
@@ -77,7 +77,7 @@ def play(game, player1, player2, verbose = True):
         for j in othello.range_size:
             score += game.board[i][j]
 
-    print "our objective score that tells you who wins is " + str(-1 * score)
+    #print "our objective score that tells you who wins is " + str(-1 * score)
     return -1 * score
 
 
