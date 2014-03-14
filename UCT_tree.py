@@ -5,25 +5,26 @@ import random
 import math
 import game2
 import operator
+import time
 
 
 class Tree(object):
-    def __init__(self, time):
+    def __init__(self, budget):
         """
-        time is the number of simulated trajectories before returning a move
-        for #trajectories, must be greater than the branching factor at any node
+        time is the number of seconds we can think before moving
         """
         self.nodes = []
-        self.time = time
+        self.budget = budget
 
     def policy(self, game):
         # TODO if we want a version that reuses trajectories, replace the next two LOC
         self.nodes = []
         self.nodes.append(Node(-1, len(self.nodes), game))
 
+        start_time = time.time()
+
         # run time # of trajectories
-        # while current_time() < start_time + time
-        for i in range(self.time):
+        while time.time() < start_time + self.budget:
             self.trajectory(self.nodes[0])
 
         # pick action from root with highest Q-value
