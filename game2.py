@@ -72,7 +72,7 @@ def play(game, player1, player2, verbose = True):
     #        player2_think/player2_ply)
     
     ## added following return capability for UCT algorithm training
-    print "Game score: " + str(game.abs_score())
+    #print "Game score: " + str(game.abs_score())
     return game.abs_score()
 
 

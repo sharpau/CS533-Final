@@ -53,7 +53,7 @@ class Tree(object):
         else:
             # the value at this node IS the simulated value
             result = state.abs_score()
-            print "(childnode)Game score: " + str(result)
+            #print "(childnode)Game score: " + str(result)
 
         return new_idx, result
 
@@ -86,7 +86,7 @@ class Tree(object):
         actions = start_node.state.generate_moves()
         if len(actions) == 0:
             result = start_node.state.abs_score()
-            print "(noactions) Game score: " + str(result)
+            #print "(noactions) Game score: " + str(result)
             return result
 
         not_yet_taken = [x for x in actions if start_node.action_counts[str(x)] == 0]
