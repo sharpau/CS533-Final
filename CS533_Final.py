@@ -78,8 +78,9 @@ if __name__ == "__main__":
     ## Rich's playing around with functions....
     #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: random_move_policy(x)), True)
 
-    t = UCT_tree.Tree(20)
-    game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(t.policy), True)
+    t = UCT_tree.Tree(200)
+    #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(t.policy), True)
+    game2.play(othello.game(), game2.player(t.policy), game2.player(lambda x: minimax.minimax(x, 3)), True)
 
 
 

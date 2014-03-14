@@ -66,19 +66,14 @@ def play(game, player1, player2, verbose = True):
     player1.gameover(temp, last_move)
     player2.gameover(temp, last_move)
 
-    if player1_ply and player2_ply:
-        print "%d ply: Player 1 %.1f s per ply. Player2 %.1f s per ply" % (
-            player1_ply+player2_ply, player1_think/player1_ply,
-            player2_think/player2_ply)
+    #if player1_ply and player2_ply:
+    #    print "%d ply: Player 1 %.1f s per ply. Player2 %.1f s per ply" % (
+    #        player1_ply+player2_ply, player1_think/player1_ply,
+    #        player2_think/player2_ply)
     
     ## added following return capability for UCT algorithm training
-    score = 0
-    for i in othello.range_size:
-        for j in othello.range_size:
-            score += game.board[i][j]
-
-    #print "our objective score that tells you who wins is " + str(-1 * score)
-    return -1 * score
+    print "Game score: " + str(game.abs_score())
+    return game.abs_score()
 
 
 def user_player(game):

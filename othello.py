@@ -63,6 +63,17 @@ class game:
 
         return game(self)
 
+    def abs_score(self):
+        """
+        The current game score, - for white, + for black
+        """
+        score = 0
+        for i in range_size:
+            for j in range_size:
+                score += self.board[i][j]
+        return -1 * score
+
+
     def score(game):
         """The current game score w.r.t. player whose move it is.
 

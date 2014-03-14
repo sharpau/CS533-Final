@@ -28,9 +28,34 @@ class Tree(object):
 
         # pick action from root with highest Q-value
         actions = self.nodes[0].state.generate_moves()
-        max_index, _ = max(enumerate([(self.nodes[0].action_values[x]/self.nodes[0].action_counts[x]) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
+        max_index, max_value = max(enumerate([(float(self.nodes[0].action_values[x]) / float(self.nodes[0].action_counts[x])) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
 
-        return 0, actions[max_index]
+        return max_value, actions[max_index]
+
+    def build_child_node(self, start_node, action):
+        """
+        Taking a start node and an action, builds a new child node and simulates one game from one of its actions.
+        """
+        state = start_node.state.copy()
+        state.play_move(action)
+        # make a new node for this state
+        new_idx = len(self.nodes)
+        self.nodes.append(Node(start_node.idx, new_idx, state))
+        moves = state.generate_moves()
+
+        if len(moves) > 0:
+            # simulate trajectory from this node
+            new_node_action = random.choice(moves)
+            state.play_move(new_node_action)
+            result = self.simulate_random(self.nodes[new_idx].state.copy())
+            # update child
+            self.update(self.nodes[new_idx], new_node_action, result)
+        else:
+            # the value at this node IS the simulated value
+            result = state.abs_score()
+            print "(childnode)Game score: " + str(result)
+
+        return new_idx, result
 
     def trajectory(self, start_node):
         """
@@ -59,30 +84,16 @@ class Tree(object):
         #print start_node.state
 
         actions = start_node.state.generate_moves()
-
-        if len(actions) == 1:
-            print "actions: " + str(actions)
-            print "at state:\n" + str(start_node.state)
-            print "child_idxs: \n" + str(start_node.child_idxs)
+        if len(actions) == 0:
+            result = start_node.state.abs_score()
+            print "(noactions) Game score: " + str(result)
+            return result
 
         not_yet_taken = [x for x in actions if start_node.action_counts[str(x)] == 0]
         if len(not_yet_taken) > 0:
             # take an action that we haven't yet taken
             action = random.choice(not_yet_taken)
-            state = start_node.state.copy()
-            state.play_move(action)
-
-            # make a new node for this state
-            new_idx = len(self.nodes)
-            self.nodes.append(Node(start_node.idx, new_idx, state))
-
-            # simulate trajectory from this node
-            new_node_action = random.choice(state.generate_moves())
-            state.play_move(new_node_action)
-            result = self.simulate_random(self.nodes[new_idx].state.copy())
-
-            # update child
-            self.update(self.nodes[new_idx], new_node_action, result)
+            new_idx, result = self.build_child_node(start_node, action)
             # update self
             self.update(start_node, action, result)
             # update action -> child mapping
@@ -99,7 +110,8 @@ class Tree(object):
             if start_node.child_idxs[str(action)] >= 0:
                 result = self.trajectory(self.nodes[start_node.child_idxs[str(action)]])
             else:
-
+                new_idx, result = self.build_child_node(start_node, action)
+                start_node.child_idxs[str(action)] = new_idx
 
             # update own state
             self.update(start_node, action, result)
@@ -107,8 +119,8 @@ class Tree(object):
             return result
 
     def tree_search_value(self, node, action_key, c):
-        q = node.action_values[action_key] / node.action_counts[action_key]
-        explore = math.log(node.visits) / node.action_counts[action_key]
+        q = float(node.action_values[action_key]) / float(node.action_counts[action_key])
+        explore = math.log(node.visits) / float(node.action_counts[action_key])
         result = q + c * math.sqrt(explore)
         return result
 
