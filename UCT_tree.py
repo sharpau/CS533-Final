@@ -31,7 +31,7 @@ class Tree(object):
 
         # pick action from root with highest Q-value
         actions = self.nodes[0].state.generate_moves()
-        max_index, max_value = max(enumerate([(float(self.nodes[0].action_values[x]) / float(self.nodes[0].action_counts[x])) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
+        max_index, max_value = max(enumerate([self.nodes[0].q_value(x) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
 
         return max_value, actions[max_index]
 
@@ -152,6 +152,13 @@ class Node(object):
         explore = math.log(self.visits) / float(self.action_counts[action_key])
         result = q + c * math.sqrt(explore)
         return result
+
+    def q_value(self, action_key):
+        if self.action_counts[action_key] > 0:
+            q = float(self.action_values[action_key]) / float(self.action_counts[action_key])
+        else:
+            q = 0
+        return q
 
     def update(self, action, result):
         # black = player 1, first to go, positive scores
