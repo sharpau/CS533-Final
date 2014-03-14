@@ -9,12 +9,14 @@ import time
 
 
 class Tree(object):
-    def __init__(self, budget):
+    def __init__(self, budget, sim_policy, c = 1):
         """
         time is the number of seconds we can think before moving
         """
         self.nodes = []
         self.budget = budget
+        self.c = c
+        self.sim_policy = sim_policy
 
     def policy(self, game):
         # TODO if we want a version that reuses trajectories, replace the next two LOC
@@ -48,9 +50,9 @@ class Tree(object):
             # simulate trajectory from this node
             new_node_action = random.choice(moves)
             state.play_move(new_node_action)
-            result = self.simulate_random(self.nodes[new_idx].state.copy())
+            result = self.simulate(self.nodes[new_idx].state.copy())
             # update child
-            self.update(self.nodes[new_idx], new_node_action, result)
+            self.nodes[new_idx].update(new_node_action, result)
         else:
             # the value at this node IS the simulated value
             result = state.abs_score()
@@ -81,9 +83,6 @@ class Tree(object):
         #   update own local state based on result
         #   return result
 
-        #print "trajectory at node: "
-        #print start_node.state
-
         actions = start_node.state.generate_moves()
         if len(actions) == 0:
             result = start_node.state.abs_score()
@@ -96,16 +95,15 @@ class Tree(object):
             action = random.choice(not_yet_taken)
             new_idx, result = self.build_child_node(start_node, action)
             # update self
-            self.update(start_node, action, result)
+            start_node.update(action, result)
             # update action -> child mapping
             start_node.child_idxs[str(action)] = new_idx
 
             # unwind recursion
             return result
         else:
-            c = 1
             # determine action to take based on start_node.action_counts and start_node.action_values and start_node.visits
-            max_index, _ = max(enumerate([self.tree_search_value(start_node, x, c) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
+            max_index, _ = max(enumerate([start_node.tree_search_value(x, self.c) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
             action = actions[max_index]
 
             if start_node.child_idxs[str(action)] >= 0:
@@ -115,41 +113,12 @@ class Tree(object):
                 start_node.child_idxs[str(action)] = new_idx
 
             # update own state
-            self.update(start_node, action, result)
+            start_node.update(action, result)
 
             return result
 
-    def tree_search_value(self, node, action_key, c):
-        q = float(node.action_values[action_key]) / float(node.action_counts[action_key])
-        explore = math.log(node.visits) / float(node.action_counts[action_key])
-        result = q + c * math.sqrt(explore)
-        return result
-
-    def update(self, node, action, result):
-        # black = player 1, first to go, positive scores
-        # white = player 2, second to go, negative scores
-        rel_score = result * node.state.player
-        node.visits += 1
-        node.action_counts[str(action)] += 1
-        node.action_values[str(action)] += result
-    
-    def _random_policy(self, game):
-        return 0, random.choice(game.generate_moves())
-    
-    def simulate_random(self, start_state):
-        ''' 
-        This simulates the random policy that occurs outside of the tree
-        policy. Simulates adversarial othello playing until end of game.
-        inputs: start_state = a 'game' object
-        returns: winner score (- for player 2)(+ for player 1)
-        '''
-        return game2.play(start_state, game2.player(lambda x: self._random_policy(x)), game2.player(lambda x: self._random_policy(x)), False)
-    
-    def _greedy_policy(self, game):
-        return 0, random.choice(game.generate_moves())
-    
-    def simulate_greedy(self, start_state):
-        return game2.play(start_state, game2.player(lambda x: self.greedy_policy(x)), game2.player(lambda x: self._greedy_policy(x)), False)
+    def simulate(self, start_state):
+        return game2.play(start_state, game2.player(lambda x: self.sim_policy(x)), game2.player(lambda x: self.sim_policy(x)), False)
 
 class Node(object):
     def __init__(self, parent_idx, idx, state):
@@ -177,3 +146,17 @@ class Node(object):
 
         # dict of {"action": rewards received}
         self.action_values = {str(k): 0 for k in self.state.generate_moves()}
+
+    def tree_search_value(self, action_key, c):
+        q = float(self.action_values[action_key]) / float(self.action_counts[action_key])
+        explore = math.log(self.visits) / float(self.action_counts[action_key])
+        result = q + c * math.sqrt(explore)
+        return result
+
+    def update(self, action, result):
+        # black = player 1, first to go, positive scores
+        # white = player 2, second to go, negative scores
+        rel_score = result * self.state.player
+        self.visits += 1
+        self.action_counts[str(action)] += 1
+        self.action_values[str(action)] += result

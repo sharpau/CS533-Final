@@ -9,62 +9,17 @@
 ##
 ###############################################################################
 
-import time
 import random
 import UCT_tree
-
-'''IDK about any of this... the inheritance between files & file structure
-    is a little weird.'''
-
-## Executes adversarial simulation of choosing random actions.
-## pick up where the tree policy left off.
-## inputs: copy of original game state passed to UCT_trainer
-## returns: string indicating winner
-## updates: None
-def execute_random_actions(rand_trajectory_game):
-    return "this will return a winner"
+import othello
+import minimax
+import game2
 
 
-def UCT_trainer(game):
-    '''Pseudocode:
-
-    UCT algorithm here.  Not sure how to link the tree to this function...
-    
-    Should follow according to tree policy until leaf node...
-    
-    Then execute random actions until terminal state.
-    
-    '''
-    ## Executing random actions
-    ## Make a copy of the game at the state were we reached the leaf node
-#    rand_trajectory_game = game.copy()
-#    winner = execute_random_actions(rand_trajectory_game)
-    return
-
-def UCT_policy(game, policy='load something from disk that defines what we have learned?'):
-    '''Pseudocode:
-    
-    moves = game.generate_moves()
-    
-    move = somehow pick a move from 'moves' according to the state of the game and 
-            our stored policy...
-    
-    return (0,move)
-    '''
-    return
-
-def random_move_policy(game):
-    moves = game.generate_moves()
-    print moves #remove
-    move_index = random.randint(0,len(moves)-1)
-    move = moves[move_index]
-    print("I chose move {0}".format(move)) #remove
-    return (0,move)
+def random_policy(game):
+    return 0, random.choice(game.generate_moves())
 
 if __name__ == "__main__":
-    import othello
-    import minimax
-    import game2
     ## for actual UCT training just do:
 #    uct_policy = UCT_trainer()
 
@@ -74,13 +29,16 @@ if __name__ == "__main__":
 #    play(othello.game(), player(lambda x: ourPolicies.UCT_policy(x, SOME_VARIABLE_LEARNED_POLICY)),
 #         player(lambda x: minimax.minimax(x, 3)) , True)
 
-
     ## Rich's playing around with functions....
     #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(lambda x: random_move_policy(x)), True)
 
-    t = UCT_tree.Tree(10)
+    t = UCT_tree.Tree(5, random_policy, 1)
     #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(t.policy), True)
-    game2.play(othello.game(), game2.player(t.policy), game2.player(lambda x: minimax.minimax(x, 3)), True)
+    game2.play(othello.game(), game2.player(t.policy), game2.player(lambda x: minimax.minimax(x, 4)), True)
 
-
+# run this algorithm with different hard-coded sizes
+# for each policy
+    # for each budget (i.e. 1,2,5 seconds)
+        # for each opponent
+            # run n trials with us first, n trials with them first
 
