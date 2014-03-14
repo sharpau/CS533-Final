@@ -55,7 +55,16 @@ class Tree(object):
         #   update own local state based on result
         #   return result
 
+        #print "trajectory at node: "
+        #print start_node.state
+
         actions = start_node.state.generate_moves()
+
+        if len(actions) == 1:
+            print "actions: " + str(actions)
+            print "at state:\n" + str(start_node.state)
+            print "child_idxs: \n" + str(start_node.child_idxs)
+
         not_yet_taken = [x for x in actions if start_node.action_counts[str(x)] == 0]
         if len(not_yet_taken) > 0:
             # take an action that we haven't yet taken
@@ -87,7 +96,10 @@ class Tree(object):
             max_index, _ = max(enumerate([self.tree_search_value(start_node, x, c) for x in [str(y) for y in actions]]), key=operator.itemgetter(1))
             action = actions[max_index]
 
-            result = self.trajectory(self.nodes[start_node.child_idxs[str(action)]])
+            if start_node.child_idxs[str(action)] >= 0:
+                result = self.trajectory(self.nodes[start_node.child_idxs[str(action)]])
+            else:
+
 
             # update own state
             self.update(start_node, action, result)
