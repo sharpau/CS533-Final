@@ -118,7 +118,8 @@ class Tree(object):
             return result
 
     def simulate(self, start_state):
-        return game2.play(start_state, game2.player(lambda x: self.sim_policy(x)), game2.player(lambda x: self.sim_policy(x)), False)
+        result, _ = game2.play(start_state, game2.player(lambda x: self.sim_policy(x)), game2.player(lambda x: self.sim_policy(x)), False)
+        return result
 
 class Node(object):
     def __init__(self, parent_idx, idx, state):
