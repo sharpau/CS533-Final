@@ -99,14 +99,15 @@ if __name__ == "__main__":
     #game2.play(othello.game(), game2.player(lambda x: minimax.minimax(x, 3)), game2.player(t.policy), True)
     #game2.play(othello.game(), game2.player(t.policy), game2.player(lambda x: minimax.minimax(x, 4)), True)
 
-    policies = {"random": random_policy, "greedy": greedy_policy}
-    budgets = [1, 2, 5]
-    c_vals = [1, 5, 10]#, 20, 50]
-    opponents = {"random": game2.player(random_policy),
-                 "greedy": game2.player(greedy_policy),
-                 "minimax-2": game2.player(lambda x: minimax.minimax(x, 2)),
-                 "minimax-3": game2.player(lambda x: minimax.minimax(x, 3)),
-                 "minimax-4": game2.player(lambda x: minimax.minimax(x, 4))}
+    policies = {"random": random_policy}#, "greedy": greedy_policy}
+    budgets = [1]
+    c_vals = [1, 5]#, 20, 50]
+    # opponents = {"random": game2.player(random_policy),
+    #              "greedy": game2.player(greedy_policy),
+    #              "minimax-2": game2.player(lambda x: minimax.minimax(x, 2)),
+    #              "minimax-3": game2.player(lambda x: minimax.minimax(x, 3)),
+    #              "minimax-4": game2.player(lambda x: minimax.minimax(x, 4))}
+    opponents = {"minimax-4": game2.player(lambda x: minimax.minimax(x, 4))}
     # number of games going first/second with each configuration
     n = 10
 
@@ -115,10 +116,6 @@ if __name__ == "__main__":
         # for each budget (i.e. 1,2,5 seconds)
             # for each opponent
                 # run n trials with us first, n trials with them first
-    
-    ## saving printouts to output.txt
-    old_stdout = sys.stdout # keep pointer to original stdout
-    sys.stdout = open('output.txt', 'wb')
     
     for pol_key in policies:
         for b in budgets:
@@ -140,9 +137,4 @@ if __name__ == "__main__":
                     print(str(average(uct_black)))
                     print("Results as white (negative = we win):")
                     print(str(average(uct_white)))
-    
-    ## closing output.txt and restore stdout
-    sys.stdout.flush()
-    sys.stdout.close()
-    sys.stdout = old_stdout
 
