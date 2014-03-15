@@ -116,6 +116,10 @@ if __name__ == "__main__":
             # for each opponent
                 # run n trials with us first, n trials with them first
     
+    ## saving printouts to output.txt
+    old_stdout = sys.stdout # keep pointer to original stdout
+    sys.stdout = open('output.txt', 'wb')
+    
     for pol_key in policies:
         for b in budgets:
             for c in c_vals:
@@ -136,4 +140,9 @@ if __name__ == "__main__":
                     print(str(average(uct_black)))
                     print("Results as white (negative = we win):")
                     print(str(average(uct_white)))
+    
+    ## closing output.txt and restore stdout
+    sys.stdout.flush()
+    sys.stdout.close()
+    sys.stdout = old_stdout
 
