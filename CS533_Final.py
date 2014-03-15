@@ -3,8 +3,7 @@
 ## Monte Carlo Planning Algorithm to play Othello
 ###############################################################################
 ## NOTES:
-## I think this .py file will be very similar to the 'minimax.py' file that is
-##    provided in the game files....?
+## 
 ##
 ##
 ###############################################################################
@@ -14,7 +13,7 @@ import UCT_tree
 import othello
 import minimax
 import game2
-
+import sys
 
 def random_policy(game):
     return 0, random.choice(game.generate_moves())
@@ -28,13 +27,13 @@ def _calculate_value(game, move):
     totalValue = 0
     for vector in othello.directions:
         current_pos = move
-        print current_pos
+        #print(current_pos)
         adj_pos = (None,None)
         vector_value = 0
         playable = False
         while True:
             adj_pos = [current_pos[0] + vector[0], current_pos[1] + vector[1]]
-            print adj_pos
+            #print(adj_pos)
             ## if adjacent position is outside board range exit inner loop
             if adj_pos[0] >= othello.size or adj_pos[1] >= othello.size:
                 break
@@ -55,22 +54,21 @@ def _calculate_value(game, move):
             totalValue += vector_value
     return totalValue
 
-
 def greedy_policy(game):
     ## Test if no move available
     if None in game.generate_moves():
-        return None
+        return (0,None)
     ## Otherwise there is at least 1 move to take.
     else:
         moves = game.generate_moves()
         ## empty dictionary of (key:val = (move): int value of move)
         moveDict = {key: None for key in moves}
         for move in moves:
-            # TODO Figure out how to calculate the worth of different possible moves.
+            # calculate value of each move.
             value = _calculate_value(game, move)
             ## set dictionary value at specific key.
             moveDict[move] = value
-            print moveDict
+            #print(moveDict)
         ## best key Move according to values.
         bestMove = max(moveDict.iterkeys(), key=lambda x: moveDict[x])
         return (0,bestMove)
@@ -117,7 +115,7 @@ if __name__ == "__main__":
         # for each budget (i.e. 1,2,5 seconds)
             # for each opponent
                 # run n trials with us first, n trials with them first
-
+    
     for pol_key in policies:
         for b in budgets:
             for c in c_vals:
@@ -133,9 +131,9 @@ if __name__ == "__main__":
                         w_result, w_game = game2.play(othello.game(), opponents[opp_key], uct_player, False)
                         uct_white.append(w_result)
                         #print w_game
-                    print "Average score over " + str(n) + "trials for default policy " + str(pol_key) + ", budget " + str(b) + ", c = " + str(c) + ", opponent " + str(opp_key) + ":"
-                    print "Results as black (positive = we win):"
-                    print str(average(uct_black))
-                    print "Results as white (negative = we win):"
-                    print str(average(uct_white))
+                    print("Average score over " + str(n) + "trials for default policy " + str(pol_key) + ", budget " + str(b) + ", c = " + str(c) + ", opponent " + str(opp_key) + ":")
+                    print("Results as black (positive = we win):")
+                    print(str(average(uct_black)))
+                    print("Results as white (negative = we win):")
+                    print(str(average(uct_white)))
 

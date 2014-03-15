@@ -1,7 +1,7 @@
 # othello
 
 # each side of the game board
-size = 6
+size = 8
 # pre-computed values
 range_size = range(size)
 size_m = size - 1

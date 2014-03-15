@@ -178,10 +178,10 @@ class player:
     
 if __name__ == "__main__":
 
-    print """othello_gui, Copyright (C) 2006 Nimar S. Arora
+    print("""othello_gui, Copyright (C) 2006 Nimar S. Arora
 othello_gui comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
-under certain conditions."""
+under certain conditions.""")
     
     game2.play(othello.game(),
                game2.player(lambda x: minimax.alphabeta(x, 4, othello.edge_eval)),

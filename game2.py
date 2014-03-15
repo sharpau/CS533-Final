@@ -16,7 +16,7 @@ def play(game, player1, player2, verbose = True):
     player2_ply = 0
 
     if verbose:
-        print game
+        print(game)
         
     last_move = None
     while not game.terminal_test():
@@ -47,8 +47,8 @@ def play(game, player1, player2, verbose = True):
             raise IllegalMove
         game.play_move(move)
         if verbose:
-            print game
-            print "(player", next, "score", -1*game.score(), ")"
+            print (game)
+            print ("(player", next, "score", -1*game.score(), ")")
         
         # switch the next player and continue the game play loop
         next = 3 - next
@@ -84,11 +84,11 @@ def user_player(game):
         try:
             move = eval(inp)
         except SyntaxError:
-            print "Error: garbage move"
+            print("Error: garbage move")
             continue
         if move not in game.generate_moves():
-            print "Error: illegal move", move, type(move)
-            print "Valid moves are", game.generate_moves()
+            print("Error: illegal move", move, type(move))
+            print("Valid moves are", game.generate_moves())
             continue
         break
 
