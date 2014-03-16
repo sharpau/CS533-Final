@@ -1,0 +1,6 @@
+experiment parameters
+	thinking time per move
+	default policy (random, greedy)
+	new tree from scratch vs reusing trajectories
+	different opponents (different alpha-beta depths, random, greedy)
+	value of 'c' in exploration term (c same order of magnitude as state-action values)
