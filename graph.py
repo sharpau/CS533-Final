@@ -30,10 +30,10 @@ opponentDict66 = {'Random_Policy':R_66, 'Greedy_Policy':G_66, 'Minimax2':M2_66, 
 
 for key in opponentDict66.keys():
     fig, a = p.subplots()
-    bars1 = a.bar(indices1, opponentDict66[key][0], width=barwidth, color='k')
-    bars2 = a.bar(indices2, opponentDict66[key][1], width=barwidth, color='w')
-    bars3 = a.bar(indices3, opponentDict66[key][2], width=barwidth, color='k')
-    bars4 = a.bar(indices4, opponentDict66[key][3], width=barwidth, color='w')
+    bars1 = a.bar(indices1, opponentDict66[key][0], width=barwidth, color='k',hatch='//')
+    bars2 = a.bar(indices2, opponentDict66[key][1], width=barwidth, color='w',hatch='//')
+    bars3 = a.bar(indices3, opponentDict66[key][2], width=barwidth, color='k',hatch=r"\\")
+    bars4 = a.bar(indices4, opponentDict66[key][3], width=barwidth, color='w',hatch=r"\\")
 
     a.set_xticks((1, 3.5, 6))
     a.set_xticklabels(('0.1', '1', '10'))
