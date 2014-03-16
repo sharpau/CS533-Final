@@ -22,10 +22,14 @@
 
 \vspace{-.5in}
 \section{Introduction}
+The following report will cover the development of a Monte-Carlo-based Othello player. The algorithm described below will use the UCT algorithm to play Othello against multiple opponents in a adversarial environment. We have developed the UCT Monte-Carlo-based tree search algorithm in python, and created it to be compatible with a pre-designed Othello game environment. The hope is that our algorithm will succeed in beating the provided AI 'minimax lookahead algorithm'.
 
+Section~\ref{back} will provide some fundamental background knowledge on the game Othello, as well as the theoretical components of the UCT tree algorithm.  Next, Section~\ref{meth} will cover the methodology and important coding used to validate and evaluate our algorithm. Section~\ref{results} will discuss the results of the experimentation described in the previous section, and finally Section~\ref{conc} will conclude.
 
 \section{Background Information}
+\label{back}
 
+The following discusses the fundamental components of playing Othello, as well as implementing the UCT algorithm.
 
 \subsection{Playing Othello}
 %\begin{figure}[!h]
@@ -41,6 +45,7 @@
 
 
 \section{Our Methodology}
+\label{meth}
 
 \subsection{Othello Python Code}
 
@@ -51,7 +56,25 @@
 \subsection{Experimentation}
 
 
+
+\begin{enumerate}
+\item Default simulation policy outside of the tree policy (greedy and random)
+\item C-values for exploration within tree.
+\item Different Opponents (random, greedy, minimax-3, minimax-4, minimax-5)
+\item Play first or play second.
+\item 10 games each average scores.
+
+\end{enumerate}
+
 \section{Results}
+\label{results}
+
+
+\section{Conclusion}
+\label{conc}
+
+
+
 
 
 
