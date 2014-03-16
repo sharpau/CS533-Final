@@ -16,7 +16,7 @@
 \begin{document}
 
 \title{\vspace{-1in}Final Project -- CS 533 \\ Monte Carlo UCT Algorithm Applied to Playing Othello}
-\author{Rich Meier}
+\author{Rich Meier \& Austin Sharp}
 \date{\today}
 \maketitle
 
@@ -45,6 +45,7 @@ In order to maximize the number of captured pieces on the board, there are a few
 \end{center}
 \end{figure}
 
+\pagebreak
 \subsection{UCT Algorithm}
 The UCT algorithm is a Monte-Carlo tree based algorithm that utilizes explore/exploit tactics to build a decision tree at each independent action level. Simply put, whenever the agent must make a decision, the UCT algorithm rolls-out multitudes of independent trajectories that utilize the best policy according to the tree. If the trajectory reaches a point that the tree has not yet simulated, a default policy is executed in order to simply estimate values for that particular sub-tree.  This in turn adds and updates a new leaf node as well as the nodes along the path of the trajectory - starting at the root node.
 
@@ -54,6 +55,7 @@ The values that are learned via this algorithm are approximate Q-values.  This m
 \Pi_{uct}(s) = MAX_a \left( Q(s,a) + c*\sqrt{\frac{\log(n(s))}{n(s,a)}} \right)
 \end{equation}
 
+\pagebreak
 \section{Methodology}
 \label{meth}
 
@@ -81,20 +83,54 @@ Our implementation incidentally relies on the fact that Othello is deterministic
 
 Finally, our evaluation in CS533\_Final.py consists of nested loops over several sets of parameters, including the default policy, opponent players, values of c, time budgets per-move, and the number of games to play at each configuration. This makes it easy to collect results for any number of possible configurations. However, especially with larger time budgets, the runtime becomes prohibitive, and thus we used this setup to select interesting values, to cut down on the number of final configurations tested.
 
-\subsection{Policies}
-
 \subsection{Experimentation}
+As described above, 'CS533\_Final.py' contains the main function that sets up the experimentation, evaluation, and algorithm analysis portion of this project. Below we provide some detail about our experimental setup in order to better understand the Results section of this report.
 
+\subsubsection{Finding UCT C-value} 
+Mainly due to extremely long runtime, we decided to determine a sufficient C-value based on a subset of test runs. Here we decided to base our explore/exploit coefficient off of playing the most intelligent opponent that our algorithm would eventually play - namely Minimax lookahead 4 (Minimax-4). Since we planned to run our algorithm on two different board sizes, it was expected that the value of C would change. Since the C is meant to balance Q-values with exploration, it was important to find two independent C-values for both 6x6 and 8x8 because Q-values in 8x8 have the capability to be larger than 6x6 (64 points versus 36 points).  The table below depicts our experimentation for finding a sufficient C-value.
 
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+C-Value & \multicolumn{4}{c|}{Score}\\
+\hline 
+ & 6x6 as Black & 6x6 as White & 8x8 as Black & 8x8 as White \\ 
+\hline 
+1 & 4 & 30 & - & - \\ 
+\hline 
+5 & 11 & 30 & - & - \\ 
+\hline 
+10 & 3 & 30 & - & - \\ 
+\hline 
+20 & 17 & 29 & 37 & 41 \\ 
+\hline 
+30 & 6 & 27 & - & - \\ 
+\hline 
+35 & 7 & 31 & - & - \\ 
+\hline 
+40 & 11 & 30 & 35 & 40 \\ 
+\hline 
+45 & 15 & 28 & - & - \\ 
+\hline 
+50 & 17 & 33 & 35 & 40 \\ 
+\hline 
+60 & 2 & 32 & 36 & 36 \\ 
+\hline 
+70 & - & - & 34 & 46 \\ 
+\hline 
+80 & 15 & 30 & 30 & 49 \\ 
+\hline 
+100 & 11 & 32 & 27 & 51 \\ 
+\hline 
+\end{tabular} 
 
-\begin{enumerate}
-\item Default simulation policy outside of the tree policy (greedy and random)
-\item C-values for exploration within tree.
-\item Different Opponents (random, greedy, minimax-3, minimax-4, minimax-5)
-\item Play first or play second.
-\item 10 games each average scores.
+Based on these simulation results, we determined that the best C-value for a 6x6 board was between $40$ and $50$.  The 8x8 grid had a higher target C-value as expected, and fell in the range $\approx60$ to $80$.  For the 6x6 grid we chose to use $C=45$ and for the 8x8 we chose $C=70$.
 
-\end{enumerate}
+\subsubsection{Default Policy Choice}
+
+\subsubsection{Varied Opponents}
+
+\subsubsection{Simulating as Black or White (Player 1 or Player 2)}
+
 
 \section{Results}
 \label{results}
@@ -181,6 +217,6 @@ Based on the above graphs, our UCT Othello playing agent performed quite well ag
 
 This latter fact was especially amplified in playing more intelligent opponents (i.e. Minimax with 4 move lookahead) because when Minimax 4 went first, the moves that look better at the beginning of the game were selected, but given a higher probability of achieving more strategic places by moving second, the UCT algorithm typically made a comeback and won by a larger margin.
 
-Unfortunately due to the length of simulation time, we were not able to simulate and average over more than 10 games, and therefore there are a few outliers to the above trends.  However, we felt that the operation of the UCT algorithm with both random and greedy default policies was well-represented by the provided results.
+Unfortunately due to the length of simulation time, we were not able to simulate and average over more than 10 games, and therefore there are a few outliers to the above trends.  However, we felt that the operation and performance of the UCT algorithm with both random and greedy default policies was well-represented by the provided results.
 
 \end{document}
