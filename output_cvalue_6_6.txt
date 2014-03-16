@@ -1,0 +1,88 @@
+Average score over 10trials for default policy random, budget 1, c = 1, opponent minimax-4:
+Results as black (positive = we win):
+4
+Results as white (negative = we win):
+30
+
+
+Average score over 10trials for default policy random, budget 1, c = 5, opponent minimax-4:
+Results as black (positive = we win):
+11
+Results as white (negative = we win):
+30
+
+
+Average score over 10trials for default policy random, budget 1, c = 10, opponent minimax-4:
+Results as black (positive = we win):
+3
+Results as white (negative = we win):
+30
+
+
+Average score over 10trials for default policy random, budget 1, c = 20, opponent minimax-4:
+Results as black (positive = we win):
+17
+Results as white (negative = we win):
+29
+
+
+Average score over 10trials for default policy random, budget 1, c = 30, opponent minimax-4:
+Results as black (positive = we win):
+6
+Results as white (negative = we win):
+27
+
+
+Average score over 10trials for default policy random, budget 1, c = 35, opponent minimax-4:
+Results as black (positive = we win):
+7
+Results as white (negative = we win):
+31
+
+
+Average score over 10trials for default policy random, budget 1, c = 40, opponent minimax-4:
+Results as black (positive = we win):
+11
+Results as white (negative = we win):
+30
+Average score over 10trials for default policy random, budget 1, c = 40, opponent minimax-4:
+Results as black (positive = we win):
+15
+Results as white (negative = we win):
+29
+
+
+Average score over 10trials for default policy random, budget 1, c = 45, opponent minimax-4:
+Results as black (positive = we win):
+15
+Results as white (negative = we win):
+28
+
+
+Average score over 10trials for default policy random, budget 1, c = 50, opponent minimax-4:
+Results as black (positive = we win):
+17
+Results as white (negative = we win):
+33
+
+
+Average score over 10trials for default policy random, budget 1, c = 60, opponent minimax-4:
+Results as black (positive = we win):
+2
+Results as white (negative = we win):
+32
+
+
+Average score over 10trials for default policy random, budget 1, c = 80, opponent minimax-4:
+Results as black (positive = we win):
+15
+Results as white (negative = we win):
+30
+
+
+Average score over 10trials for default policy random, budget 1, c = 100, opponent minimax-4:
+Results as black (positive = we win):
+11
+Results as white (negative = we win):
+32
+

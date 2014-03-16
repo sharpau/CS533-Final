@@ -1,0 +1,15 @@
+Average score over 10trials for default policy greedy, budget 0.1, c = 45, opponent minimax-4:
+Results as black (positive = we win):
+1
+Results as white (negative = we win):
+51
+Average score over 10trials for default policy greedy, budget 1, c = 45, opponent minimax-4:
+Results as black (positive = we win):
+19
+Results as white (negative = we win):
+46
+Average score over 10trials for default policy greedy, budget 10, c = 45, opponent minimax-4:
+Results as black (positive = we win):
+30
+Results as white (negative = we win):
+45
