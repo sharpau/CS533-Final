@@ -119,15 +119,13 @@ C-Value & \multicolumn{4}{c|}{Margin of Victory}\\
 \hline 
 60 & 2 & 32 & 36 & 36 \\ 
 \hline 
-70 & - & - & 34 & 46 \\ 
-\hline 
 80 & 15 & 30 & 30 & 49 \\ 
 \hline 
 100 & 11 & 32 & 27 & 51 \\ 
 \hline 
 \end{tabular} 
 
-Based on these simulation results, we determined that the best C-value for a 6x6 board was between $40$ and $50$.  The 8x8 grid had a higher target C-value as expected, and fell in the range $\approx60$ to $80$.  For the 6x6 grid we chose to use $C=45$ and for the 8x8 we chose $C=70$.
+Based on these simulation results, we determined that the best C-value for a 6x6 board was between $40$ and $50$. Although we expected a larger C value for the 8x8 grid, it was unclear after completing various simulations which C-value to use. As result, we decided to use the definitive C-value obtained on the 6x6 board for both cases.  We ended up using a $C=45$ for both board topologies.
 
 \subsubsection{Time Budget}
 Since the UCT algorithm results in estimated Q-values, there is no point at which it can be said to be 'done' or 'solved' or 'finished'. Thus at each move, UCT is given a time budget in seconds of how long it may think and run trajectories to improve its estimates. Once the time is up, it must pick an action from the root node. We tested with time budgets of 0.1, 1, and 10 seconds to show in which situations more time to ``think" and run trajectories was necessary.
@@ -146,11 +144,12 @@ In Othello, going first or second makes a major difference. The black player goe
 \section{Results}
 \label{results}
 
-This section will present the results of our experimentation with the UCT algorithm. Each of the graphs below correspond to running the UCT algorithm against a different opponent.  The first five graphs depict the results of playing the game on a 6x6 board size, and the second set of 5 graphs depict the results on a regular-sized 8x8 board.
+This section will present the results of our experimentation with the UCT algorithm. Each of the graphs below correspond to running the UCT algorithm against a different opponent.  The first five graphs depict the results of playing the game on a 6x6 board size, the second set of 5 graphs depict the results on a regular-sized 8x8 board, and the final two graphs depict the average score on both 6x6 and 8x8 against all the different opponents.
 
 The graphs are fairly self-explanatory, but there are a few points that should be reiterated for clarity.  First, each graph has 3 main columns that represent the varying budgets of ``think-time per move" for the UCT algorithm.  As explained in our experimentation, we allowed the UCT algorithm 0.1, 1, and 10 seconds to think. Within each major column there are 4 bars.  In Othello, the black player always moves first and white moves second -- this is represented by the color of each bar, where our UCT algorithm is varied between player 1 (black) and player 2 (white). 
 
 The scoring along the y-axis corresponds to the number of captured pieces on the board. In actuality, our experiments averaged the scores over ten games, so each bar represents the average margin of victory over $10$ full games. On a 6x6 board, the best scenario is that our algorithm wins by capturing all $36$ squares on the board, and the worst case is that we receive a score of $-36$ which means that our opponent captured every square on the board. Though perhaps obvious, it is worth mentioning that Othello scoring is binary. For example, on an 8x8 board, there are 64 possible points, if our algorithm gets a score of 40 then we know we beat the opponent by 40 points and thus scoring would be:
+\vspace{-.4in}
 \begin{center}
 $$\textnormal{Let } X = \textnormal{ Opponent Score} $$
 $$\textnormal{Let } Y = \textnormal{ UCT Score} $$
@@ -183,13 +182,11 @@ $$ X = 12 \textnormal{  And   } Y = X+40 = 52$$
 \end{center}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!hp]
 \begin{center}
 \includegraphics[scale=.4]{66_Minimax4}
 \end{center}
 \end{figure}
-
-\pagebreak
 
 \begin{figure}[!hp]
 \begin{center}
@@ -215,20 +212,33 @@ $$ X = 12 \textnormal{  And   } Y = X+40 = 52$$
 \end{center}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!hp]
 \begin{center}
 \includegraphics[scale=.4]{88_Minimax4}
 \end{center}
 \end{figure}
 
+\begin{figure}[!hp]
+\begin{center}
+\includegraphics[scale=.4]{66_ALL}
+\end{center}
+\end{figure}
+
+\begin{figure}[!hp]
+\begin{center}
+\includegraphics[scale=.4]{88_ALL}
+\end{center}
+\end{figure}
+
+
 \pagebreak
 \section{Discussion}
 \label{disc}
-Based on the above graphs, our UCT Othello playing agent performed quite well against multiple opponents. We were able to identify a few trends that confirm that our algorithm is working correctly.  First, the most obvious is that given a larger time budget, it is a general trend that the UCT algorithm performs better against all of the varied opponents. Second, against most opponents, it is the case that UCT wins on average by a larger margin when it is player 2 (white). After doing a bit of research on past Othello analysis it is largely agreed upon that the second player has an advantage in capturing more valuable positions on the board. Thus, in most Othello analyses, player 2 (white) has a higher probability of winning the game. 
+Based on the above graphs, our UCT Othello playing agent performed quite well against multiple opponents. We were able to identify a few trends that confirm that our algorithm is working correctly.  First, the most obvious is that given a larger time budget, it is a general trend that the UCT algorithm performs better against all of the varied opponents. This is cleary seen in the last two graphs which average the scores over all opponents. Second, against most opponents, it is the case that UCT wins on average by a larger margin when it is player 2 (white). After doing a bit of research on past Othello analysis it is largely agreed upon that the second player has an advantage in capturing more valuable positions on the board. Thus, in most Othello analyses, player 2 (white) has a higher probability of winning the game. 
 
-This latter fact was especially amplified in playing more intelligent opponents (i.e. Minimax with 4 move lookahead) because when Minimax 4 went first, the moves that look better at the beginning of the game were selected, but given a higher probability of achieving more strategic places by moving second, the UCT algorithm typically made a comeback and won by a larger margin.
+This latter fact is also seen in the final two averaged graphs, but was especially amplified in playing more intelligent opponents (i.e. Minimax with 4 move lookahead) because when Minimax 4 went first, the moves that look better at the beginning of the game were selected, but given a higher probability of achieving more strategic places by moving second, the UCT algorithm typically made a comeback and won by a larger margin.
 
-One surprise is that using the more ``intelligent" greedy policy as the default policy for simulation did not lead to more scucesful results in competition. It may be that the greater speed (meaning more simulated trajectories) and exploration resulting from the random policy offset the hopefully higher quality games resulting from the greedy policy.
+One surprise is that using the more ``intelligent" greedy policy as the default policy for simulation did not lead to more successful results in competition. It may be that the greater speed (meaning more simulated trajectories) and exploration resulting from the random policy offset the hopefully higher quality games resulting from the greedy policy.
 
 Unfortunately due to the length of simulation time, we were not able to simulate and average over more than 10 games, and therefore there are a few outliers to the above trends.  However, we felt that the operation and performance of the UCT algorithm under various conditions was well-represented by the provided results.
 
