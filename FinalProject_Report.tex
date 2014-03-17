@@ -24,7 +24,7 @@
 \section{Introduction}
 The following report will cover the development of a Monte-Carlo-based Othello player. The algorithm described below will use the UCT algorithm to play Othello against multiple opponents in a adversarial environment. We have developed the UCT Monte-Carlo-based tree search algorithm in python, and created it to be compatible with a pre-designed Othello game environment. The hope is that our algorithm will succeed in beating the provided AI that uses a minimax search of variable depth with alpha-beta pruning.
 
-Section~\ref{back} will provide some fundamental background knowledge on the game Othello, as well as the theoretical components of the UCT tree algorithm.  Next, Section~\ref{meth} will cover the methodology and important coding used to validate and evaluate our algorithm. Section~\ref{results} will discuss the results of the experimentation described in the previous section, and finally Section~\ref{conc} will conclude.
+Section~\ref{back} will provide some fundamental background knowledge on the game Othello, as well as the theoretical components of the UCT tree algorithm.  Next, Section~\ref{meth} will cover the methodology and important coding used to validate and evaluate our algorithm. Section~\ref{results} will detail the results of the experimentation described in the previous section, and Section~\ref{disc} will describe our interpretation. Finally, Section~\ref{impr} will lay out potential improvements that could be made to our solution, and Section~\ref{conc} puts this project in its place in the larger context of automated planning.
 
 \section{Background Information}
 \label{back}
@@ -138,7 +138,7 @@ The default policy is used by UCT to simulate trajectories that are outside the 
 Two default policies were used, and both were fairly simple, implemented with very little knowledge of Othello. The first policy is entirely random, choosing one of the available moves at each timestep with no bias or judgment involved. The second policy was greedy, which for a given position always chose the action that would capture the greatest number of the opponent's pieces.
 
 \subsubsection{Varied Opponents}
-To evaluate the performance of our UCT-based Othello agent, we played games against a sample of five opponents. The first two opponents were the naive random and greedy policies detailed above, which were intended to be easy to surmount. The other three policies were versions of the minimax search using alpha-beta pruning that was included with the third-party Othello environment we used. The parameter that differed among these minimax opponents was the search depth: we played against opponents that searched to depth 2, 3 and 4.
+To evaluate the performance of our UCT-based Othello agent, we played games against a sample of five opponents. The first two opponents were the naive random and greedy policies detailed above, which were intended to be easy to surmount. The other three policies were versions of minimax search that was included with the third-party Othello environment we used. The parameter that differed among these minimax opponents was the search depth: we played against opponents that searched to depth 2, 3 and 4.
 
 \subsubsection{Simulating as Black or White (Player 1 or Player 2)}
 In Othello, going first or second makes a major difference. The black player goes first, but it is generally considered an advantage to go second - it has been shown that with perfect play by both sides, the player going second will win on a 4x4 or 6x6 board, while perfect play results in a draw on 8x8. In our experiment we simulated 10 games as the black player and 10 games as white for each combination of opponent, budget, and default policy.
@@ -222,8 +222,8 @@ $$ X = 12 \textnormal{  And   } Y = X+40 = 52$$
 \end{figure}
 
 \pagebreak
-\section{Discussion and Conclusion}
-\label{conc}
+\section{Discussion}
+\label{disc}
 Based on the above graphs, our UCT Othello playing agent performed quite well against multiple opponents. We were able to identify a few trends that confirm that our algorithm is working correctly.  First, the most obvious is that given a larger time budget, it is a general trend that the UCT algorithm performs better against all of the varied opponents. Second, against most opponents, it is the case that UCT wins on average by a larger margin when it is player 2 (white). After doing a bit of research on past Othello analysis it is largely agreed upon that the second player has an advantage in capturing more valuable positions on the board. Thus, in most Othello analyses, player 2 (white) has a higher probability of winning the game. 
 
 This latter fact was especially amplified in playing more intelligent opponents (i.e. Minimax with 4 move lookahead) because when Minimax 4 went first, the moves that look better at the beginning of the game were selected, but given a higher probability of achieving more strategic places by moving second, the UCT algorithm typically made a comeback and won by a larger margin.
@@ -231,5 +231,21 @@ This latter fact was especially amplified in playing more intelligent opponents 
 One surprise is that using the more ``intelligent" greedy policy as the default policy for simulation did not lead to more scucesful results in competition. It may be that the greater speed (meaning more simulated trajectories) and exploration resulting from the random policy offset the hopefully higher quality games resulting from the greedy policy.
 
 Unfortunately due to the length of simulation time, we were not able to simulate and average over more than 10 games, and therefore there are a few outliers to the above trends.  However, we felt that the operation and performance of the UCT algorithm under various conditions was well-represented by the provided results.
+
+\section{Possible Improvements}
+\label{impr}
+Ultimately the biggest improvement that could be made to this project would have been more time for testing. Implementation time took a substantial amount of effort, and so we had to restrict the number of variables and configurations to a subset of what we would have liked to actually test. This was felt strongly in the small samples we averaged over (10 games per color per configuration), the choice of c-value, and the time budget (10 seconds is not a long time to think in a strategy game like Othello, but it was our practical maximum).
+
+Another area of experimentation that could have used more time was the opponent roster. We tested against simple minimax functions with the most basic evaluation function, thinking that these would prove challenging enough for our UCT implementation to face. However, in hindsight the third-party Othello AI had a better evaluation function than the default, and also provided an option to use alpha-beta pruning, both of which would have made for far more formidable opponents.
+
+In terms of the UCT algorithm itself, there are two main improvements that could be made. First, the UCT implementation builds an entirely new tree from each state where it is asked to make a move. This discards all of the information gained from those trajectories at previous decisions that passed through the new root node (a.k.a. current state). Many improvements in automated planning come from using additional information well, and this is a case where the accuracy of the Q-value estimates could be improved simply by retaining information on previous trajectories rather than throwing it away. Second, the UCT implementation will continue to take its full time budget to make moves even when the entire game tree is small (i.e. the last few moves of the game), rather than realizing it has essentially constructed a complete minimax tree and terminating. This is simply a matter of timeliness, not efficiency, but would have allowed more testing in the same amount of time.
+
+Finally, it would not be difficult to adapt this UCT implementation to work for the general case, where any game simulator that exposes a certain API could be used. The only thing missing, besides minor potential differences in function signatures, is the fact that our implementation relies on the determinism of Othello, mapping state-action pairs to resultant states to quickly traverse the tree of simulated games. For a stochastic simulator or environment, stepping through the existing tree would be steps in teh simulation, rather than waiting to begin simulating once at a leaf node.
+
+\section{Conclusion}
+\label{conc}
+UCT is a very useful algorithm. It allows for effective performance in a domain without a large amount of domain expertise, beyond a simple default policy to carry out simulations. It also can be tweaked for a number of parameters, including the very useful budget that gives good anytime performance, and the c-value in the tree policy to control the rate of exploration.
+
+Othello is a classic case for UCT because it is a game that humans are not very good at, due to the difficulty of evaluation positions and the long-term ramifications of many moves, as well as the rapidly changing environment. Our implementation, given enough of a time budget, tends to win handily against simpler classical AI opponents, and we believe would perform well against more sophisticated ones as well. In comparing different parameters, we learned some surprising facts, including the lack of improvement when using a greedy default policy and the advantage gained by moving second. Overall, our implementation could easily be generalized to other games or environments, and shows the power of Monte Carlo look-ahead trees to solve complex problems.
 
 \end{document}
